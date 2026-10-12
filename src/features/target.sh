@@ -23,6 +23,7 @@ case "${1:-}" in
 esac
 
 ksm_lock_targets || die "Failed to lock target list"
+trap 'ksm_unlock_targets' EXIT
 
 _ensure_blacklist
 
@@ -83,7 +84,7 @@ case "${1}" in
     log_i "TARGET" "Mode: merge-denylist"
     command -v magisk >/dev/null 2>&1 || { log_w "TARGET" "magisk not found, skipping"; exit 0; }
     _merge_setup
-    trap 'rm -f "$_TMP_TARGET" "$_TMP_EXIST" "$_TMP_ADD"' EXIT
+    trap 'rm -f "$_TMP_TARGET" "$_TMP_EXIST" "$_TMP_ADD"; ksm_unlock_targets' EXIT
     _merge_load_existing
 
     _denylist=$(magisk --denylist ls 2>/dev/null | awk -F'|' '{print $1}' | grep -v "isolated" || true)
@@ -104,7 +105,7 @@ case "${1}" in
   --merge)
     log_i "TARGET" "Mode: merge"
     _merge_setup
-    trap 'rm -f "$TEMP_PKGS" "${TEMP_PKGS}.filtered" "$_TMP_TARGET" "$_TMP_EXIST" "$_TMP_ADD"' EXIT
+    trap 'rm -f "$TEMP_PKGS" "${TEMP_PKGS}.filtered" "$_TMP_TARGET" "$_TMP_EXIST" "$_TMP_ADD"; ksm_unlock_targets' EXIT
     _merge_load_existing
 
     for entry in $FIXED_TARGETS; do
@@ -134,7 +135,7 @@ case "${1}" in
   *)
     log_i "TARGET" "Mode: overwrite"
     _count=0
-    trap 'rm -f "$TEMP_PKGS" "${TEMP_PKGS}.filtered" "$_TMP_TARGET"' EXIT
+    trap 'rm -f "$TEMP_PKGS" "${TEMP_PKGS}.filtered" "$_TMP_TARGET"; ksm_unlock_targets' EXIT
 
     for entry in $FIXED_TARGETS; do
       echo "$entry" >> "$_TMP_TARGET"

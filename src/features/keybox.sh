@@ -149,7 +149,7 @@ fi
 _n=0
 while [ "$_n" -lt "$_count" ]; do
   _pos=$(( (_start + _n) % _count + 1 ))
-  _entry=$(printf '%s\n' "$_pool" | sed -n "${_pos}p")
+  _entry=$(keybox_select_entry "$_pool" "$_pos") || die "Failed to select keybox entry"
   _src=$(printf '%s' "$_entry" | sed -n 's/.*"source":"\([^"]*\)".*/\1/p')
   _ver=$(printf '%s' "$_entry" | sed -n 's/.*"version":"\([^"]*\)".*/\1/p')
   _text=$(printf '%s' "$_entry" | sed -n 's/.*"text":"\([^"]*\)".*/\1/p')

@@ -129,6 +129,13 @@ keybox_is_softbanned() {
   echo "$1" | grep -o '"entries":\[[^]]*\]' | grep -o '{[^}]*"source":"'"$2"'"[^}]*"version":"'"$3"'"[^}]*}' | head -1 | grep -q '"softbanned":true'
 }
 
+# Pick a catalog entry without depending on sed implementations used by root shells.
+keybox_select_entry() {
+  case "${2:-}" in ''|*[!0-9]*) return 1 ;; esac
+  [ "$2" -gt 0 ] || return 1
+  printf '%s\n' "$1" | awk -v wanted="$2" 'NR == wanted { print; exit }'
+}
+
 # Prefer active (non-softbanned) candidates. stdin: one JSON object per line
 # with source/version. $1 = full catalog JSON. stdout: preferred pool.
 keybox_prefer_active() {

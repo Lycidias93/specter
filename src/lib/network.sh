@@ -3,6 +3,7 @@ download() {
     _dl_url="$1" _dl_output="$2" _dl_sha256="$3" _dl_oldpath="$PATH"
     PATH="/data/adb/ap/bin:/data/adb/ksu/bin:/data/adb/magisk:/data/data/com.termux/files/usr/bin:$PATH"
     _dl_tmp="" _dl_code=1 _dl_try=0 _dl_ua="Specter/1.0"
+    _dl_wget_rc="not_run" _dl_curl_rc="not_run" _dl_http="---"
 
     log_d "NET" "Downloading $_dl_url"
 
@@ -14,9 +15,15 @@ download() {
     for _dl_try in 1 2 3; do
         if busybox wget -T 10 --no-check-certificate -qO "$_dl_output" -U "$_dl_ua" "$_dl_url" 2>/dev/null; then
             [ -s "$_dl_output" ] && { _dl_code=0; break; }
+            _dl_wget_rc="empty"
+        else
+            _dl_wget_rc=$?
         fi
         if command -v curl >/dev/null 2>&1 && curl --version >/dev/null 2>&1; then
-            curl --connect-timeout 10 -Ls -o "$_dl_output" -A "$_dl_ua" "$_dl_url" 2>/dev/null && [ -s "$_dl_output" ] && { _dl_code=0; break; }
+            _dl_http=$(curl --connect-timeout 10 --max-time 30 -fsSL -o "$_dl_output" -A "$_dl_ua" -w '%{http_code}' "$_dl_url" 2>/dev/null)
+            _dl_curl_rc=$?
+            [ "$_dl_curl_rc" -eq 0 ] && [ -s "$_dl_output" ] && { _dl_code=0; break; }
+            [ "$_dl_curl_rc" -eq 0 ] && _dl_curl_rc="empty"
         fi
         sleep 1
     done
@@ -29,13 +36,13 @@ download() {
                 log_e "NET" "SHA256 mismatch for $_dl_url"
                 rm -f "$_dl_output"
                 PATH="$_dl_oldpath"
-                unset _dl_url _dl_output _dl_sha256 _dl_oldpath _dl_tmp _dl_code _dl_try _dl_sum _dl_ua
+                unset _dl_url _dl_output _dl_sha256 _dl_oldpath _dl_tmp _dl_code _dl_try _dl_sum _dl_ua _dl_wget_rc _dl_curl_rc _dl_http
                 return 1
             fi
             log_d "NET" "SHA256 verified"
         fi
     else
-        log_w "NET" "Download failed after 3 attempts: $_dl_url"
+        log_w "NET" "Download failed after 3 attempts (wget_rc=$_dl_wget_rc curl_rc=$_dl_curl_rc http=${_dl_http:----}): $_dl_url"
     fi
 
     if [ -n "$_dl_tmp" ]; then
@@ -45,7 +52,7 @@ download() {
 
     PATH="$_dl_oldpath"
     _dl_rc=$_dl_code
-    unset _dl_url _dl_output _dl_sha256 _dl_oldpath _dl_tmp _dl_code _dl_try _dl_sum _dl_ua
+    unset _dl_url _dl_output _dl_sha256 _dl_oldpath _dl_tmp _dl_code _dl_try _dl_sum _dl_ua _dl_wget_rc _dl_curl_rc _dl_http
     return $_dl_rc
 }
 
