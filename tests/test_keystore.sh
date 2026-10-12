@@ -590,4 +590,17 @@ _redir=$(grep -n "tr '\\\\0' ' ' <" "$REPO_ROOT/src/lib/keystore.sh" "$REPO_ROOT
 assert_eq "lock: no tr redirect from cmdline" "" "$_redir"
 unset _holder _real_tr _redir
 
+# Successful callers must release the lock; do not remove another owner's.
+ksm_unlock_targets
+assert_eq "lock: owned lock released" "" "$(readlink "$SPECTER_DIR/.lock/targets" 2>/dev/null || true)"
+ln -s "9999998" "$SPECTER_DIR/.lock/targets"
+ksm_unlock_targets
+assert_eq "lock: foreign lock preserved" "9999998" "$(readlink "$SPECTER_DIR/.lock/targets")"
+_target_cleanup_traps=$(grep -c "ksm_unlock_targets' EXIT" "$REPO_ROOT/src/features/target.sh")
+assert_eq "lock: all target paths release on exit" "4" "$_target_cleanup_traps"
+_scan_line=$(grep -n '^pkgs=' "$REPO_ROOT/src/features/auto_target.sh" | cut -d: -f1)
+_lock_line=$(grep -n '^ksm_lock_targets ' "$REPO_ROOT/src/features/auto_target.sh" | cut -d: -f1)
+[ "$_scan_line" -lt "$_lock_line" ] && ok "lock: package scan outside critical section" || fail "lock: package scan outside critical section"
+unset _target_cleanup_traps _scan_line _lock_line
+
 done_testing

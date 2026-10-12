@@ -5,6 +5,16 @@ source_libs
 
 _CATALOG='{"entries":[{"source":"droidwin","version":"1","text":"v1","serial":"12345","revoked":false,"softbanned":false},{"source":"droidwin","version":"2","text":"v2","serial":"67890","revoked":false,"softbanned":true},{"source":"droidwin","version":"3","text":"v3","serial":"99999","revoked":true,"softbanned":false},{"source":"yuri","version":"8","text":"v8","serial":"11111","revoked":false,"softbanned":true},{"source":"badprov","version":"1","text":"v1","serial":"00000","revoked":true,"softbanned":false}],"working":{"source":"droidwin","version":"1"},"workingEntries":[{"source":"droidwin","version":"1","text":"v1"},{"source":"droidwin","version":"2","text":"v2"},{"source":"yuri","version":"8","text":"v8"}]}'
 
+# --- Catalog entry selection: portable and deterministic, no sed address parsing ---
+_entries='{"source":"first","version":"1"}
+{"source":"second","version":"2"}
+{"source":"third","version":"3"}'
+assert_eq "entry selection: first" '{"source":"first","version":"1"}' "$(keybox_select_entry "$_entries" 1)"
+assert_eq "entry selection: third" '{"source":"third","version":"3"}' "$(keybox_select_entry "$_entries" 3)"
+assert_eq "entry selection: out of bounds" "" "$(keybox_select_entry "$_entries" 4)"
+keybox_select_entry "$_entries" nope >/dev/null
+assert_eq "entry selection: rejects invalid index" 1 "$?"
+
 # --- keybox_is_softbanned ---
 keybox_is_softbanned "$_CATALOG" "droidwin" "2"
 _rc=$?
