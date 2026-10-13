@@ -249,7 +249,6 @@ ksm_lock_targets() {
   unset _klt _klt_n _klt_pid _klt_cmd
 }
 
-# Release only our own lock, including on early exits and failed scans.
 ksm_unlock_targets() {
   _kut="$SPECTER_DIR/.lock/targets"
   if [ -L "$_kut" ] && [ "$(readlink "$_kut" 2>/dev/null)" = "$$" ]; then

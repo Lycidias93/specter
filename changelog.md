@@ -1,18 +1,3 @@
-# Unreleased source fixes (fork, 2026-10-12)
-
-These changes are merged in the source fork, but are **not** a published or installed Specter module update. Upstream review: [dpejoh/specter#105](https://github.com/dpejoh/specter/pull/105).
-
-**Fixed**
-- Release only owned target/app-target locks on all exit paths, including early failures; never remove a foreign lock.
-- Enumerate installed packages before acquiring the auto-target lock to reduce contention.
-- Select numbered keybox catalog entries without sed address-parser dependencies.
-- Preserve downloader exit/HTTP diagnostics and reject unsuccessful HTTP responses instead of treating them as valid downloads.
-
-**Regression coverage**
-- 12 shell test groups reported PASS for the source-fix PR, including target lock and keybox selection cases.
-- ShellCheck (warning severity), shell syntax, and git diff --check passed for the original fix commit.
-- Source-only verification is not evidence that the previously observed device network fault is resolved.
-
 # v1.5.0
 
 ### Highlights:

@@ -29,7 +29,6 @@ echo "$_all" | cut -d ":" -f 2 | sort -u > "$_INSTALLED"
 [ -s "$_INSTALLED" ] || cp "$TEMP_LIST" "$_INSTALLED"
 unset _all
 
-# Package-manager scans can be slow; lock only the read/modify/commit window.
 ksm_lock_targets || { log_e "AUTO_TARGET" "failed to lock target list"; exit 1; }
 
 _EXISTING="$SPECTER_DIR/.auto_target_existing.$$"

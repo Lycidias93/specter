@@ -129,7 +129,6 @@ keybox_is_softbanned() {
   echo "$1" | grep -o '"entries":\[[^]]*\]' | grep -o '{[^}]*"source":"'"$2"'"[^}]*"version":"'"$3"'"[^}]*}' | head -1 | grep -q '"softbanned":true'
 }
 
-# Pick a catalog entry without depending on sed implementations used by root shells.
 keybox_select_entry() {
   case "${2:-}" in ''|*[!0-9]*) return 1 ;; esac
   [ "$2" -gt 0 ] || return 1

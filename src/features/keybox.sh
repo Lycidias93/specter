@@ -109,7 +109,7 @@ _try_keybox_url() {
 _provider=$(cat "$CONFIG_DIR/val/keybox_provider.val" 2>/dev/null || echo "auto")
 
 log_i "KEYBOX" "Fetching available keyboxes..."
-_history=$(download "$CATALOG_URL")
+_history=$(download "$CATALOG_URL") || _history=""
 
 if [ -z "$_history" ]; then
   log_w "KEYBOX" "Catalog fetch failed, trying fallback keyboxes..."
