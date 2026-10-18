@@ -1,0 +1,29 @@
+# Specter action log – 2026-10-18, redacted
+# Original file: Specter_action_log_2026-10-18T16.41.38.log
+# Original file SHA-256: b0dfa68ecb1125bd3f9f6994b9cfee72cb04ead2fa88702cb98627dd012f4060
+# Redactions: keybox fetch URL, keybox revocation serial
+# Installed active build at inspection: v1.5.0-g59fe327 (2026-10-18)
+# A separate upstream g5d2e07c module was staged, not yet active.
+[16:27:54] [I] [ACTION] Running full integrity pipeline
+[16:27:55] [I] [ACTION] First boot, skipping Play Store data clear
+[16:27:56] [D] [TARGET] Starting target management
+[16:28:17] [W] [KSM] timed out waiting for target lock (pid 10021)
+[16:28:18] [E] [FATAL] Failed to lock target list
+[16:28:18] [F] [FATAL] Failed to lock target list
+[16:28:20] [I] [SECURITY_PATCH] First install: existing spoofed patch left unchanged (2026-10-05)
+[16:28:20] [D] [KEYBOX] Starting keybox fetch/install
+[16:28:22] [I] [KEYBOX] Fetching available keyboxes...
+[16:28:26] [I] [KEYBOX] Randomly selected: TAKR 30 (entry 1 of 3)
+[16:28:26] [I] [KEYBOX] Downloading keybox...
+[16:28:26] [D] [NET] Downloading [REDACTED_URL]
+[16:28:27] [D] [NET] Downloaded (22652) bytes
+[16:28:27] [D] [KEYBOX] Downloaded 22652 bytes
+[16:28:28] [D] [KEYBOX] Decoded 16989 bytes
+[16:28:29] [I] [KEYBOX] Checking Google revocation for serial [REDACTED_SERIAL]
+[16:28:35] [I] [KEYBOX] Keybox is not revoked
+[16:28:36] [I] [KEYBOX] Keybox installed successfully
+[16:28:36] [I] [KEYBOX] Keybox install complete
+[16:28:37] [I] [ACTION] Existing fingerprint valid, skipping fetch
+[16:31:46] [D] [DESC] New description: keybox 30 by TAKR; 747 apps; patch 2026-10-05
+[16:31:46] [I] [ACTION] Full integrity pipeline completed
+Action has ended, please exit
