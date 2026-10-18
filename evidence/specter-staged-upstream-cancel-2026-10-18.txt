@@ -1,0 +1,35 @@
+Specter pending upstream update cancellation – Pixel 10 Pro XL
+Date: 2026-10-18 (Europe/Berlin)
+Device: mustang / Android 17, Termux UID 10544, root UID 0
+Source: exact read-only module.property/file SHA-256 inspection, canonical Pixel Termux Workflowfit receipt, independent root readback.
+
+Before:
+active module: v1.5.0-g59fe327
+active module.prop SHA-256: b5ab7358321d6e29eb51646b2286b3b93752f6bd3202bf8e10671fb2a3c2b632
+staged pending module: v1.5.0-g5d2e07c (upstream HMA config hotfix)
+staged module.prop SHA-256: e9f7df6ada482df843d1eb12a069cd8e9df4519008243e4dafcadf4d156d0b48
+staged features/auto_target.sh SHA-256: f0c37157fe524b1cf2f31f90e913196e8d42d0ced5c5e2e4815595119b123c4b
+staged update marker: present
+active target/lock issue: a separate 2026-10-18 action log shows target-lock timeout despite active g59fe327.
+
+Action:
+Canceled the STAGED Magisk update, not the active installation.
+Used Pixel Termux Workflowfit, lane specter-staged-update-cancel-v1, mode run, route none, secret redacted.
+Runner script SHA-256: 9de7ce82de08d4bb0360f7355bfeeeb05c51208496e5eb9c153a2989220c3610
+Workflowfit run ID: 20261018_204214_specter-staged-update-cancel-v1_run_pixel_7055_24829
+Battery at execution: 47%, Charging
+Verified root-owned private backup retained ON-DEVICE; no root backup exported.
+RESULT: SPECTER_STAGED_UPSTREAM_CANCEL_V1_DONE outcome=success workflow_exit_code=0
+RESULT: CGRUN_WORKFLOW_OK outcome=success workflow_exit_code=0
+
+Independent post-action readback:
+active version: v1.5.0-g59fe327
+active module.prop SHA-256: b5ab7358321d6e29eb51646b2286b3b93752f6bd3202bf8e10671fb2a3c2b632
+staged pending module directory: absent
+active update marker: absent
+on-device rollback backup: v1.5.0-g5d2e07c
+on-device rollback module.prop SHA-256: e9f7df6ada482df843d1eb12a069cd8e9df4519008243e4dafcadf4d156d0b48
+backup parent permissions: 0700
+root uid: 0
+reboot: none
+This cancels an upcoming code replacement; it DOES NOT resolve the target-lock bug in the active test build.
